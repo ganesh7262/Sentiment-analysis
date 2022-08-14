@@ -16,11 +16,12 @@ class Preprocessor:
     def remove_punct(self,text):
         return re.sub(r'[]!"$%&\'()*+,./:;=#@?[\\^_`{|}~-]+', "", text)
     
-    def emoji_handling(self,text):
-        text = emoji.demojize(text)
-        text = text.replace(":"," ")
-        text = ' '.join(text.split())
-        return text
+    def emoji_handeling(self,text):
+        txt=emoji.demojize(text)
+        txt=txt.replace(':',' ')
+        txt=txt.replace('_',' ')
+        txt=txt.split('_')
+        return ''.join(txt)
     
     def call_all_func(self,X):
         X=self.emoji_handling(X)
