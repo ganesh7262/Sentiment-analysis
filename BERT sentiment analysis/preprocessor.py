@@ -23,11 +23,11 @@ class Preprocessor:
         return text
     
     def call_all_func(self,X):
+        X=self.emoji_handling(X)
         X=self.remove_URL(X)
         X=self.remove_html(X)
         X=self.remove_non_ascii(X)
         X=self.remove_punct(X)
-        X=self.emoji_handling(X)
 
         return X
 
