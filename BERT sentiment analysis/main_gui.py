@@ -1,24 +1,115 @@
+from time import sleep
+import tweepy as tw
+import pandas as pd
 import tkinter as tk
+from preprocessor import Preprocessor
 UI_FONT=('Times',30,'bold')
 # ------------------twitter setup----------#
+api_key="dC5vtwHikzkYPW6SdllG5fmOU"
+api_key_secret="vY3wDvMV8JBBMN9WDVwh7XmtfljPAs7hndvF00GkjA5P7iOpl3"
+bearer_token="AAAAAAAAAAAAAAAAAAAAAAOabQEAAAAAQDoJtk%2FE5Z%2Fp%2BxaMck%2FVofm1o04%3DIxZQW8LNNDU7FGWWYA6hi6anIq7FdLDbY9j7B0MbzwyeL9BuHU"
+access_token="1418895458890571782-m6KTRjewON7dLOHF99DIyL3cHWFuTU"
+access_token_secret="Yhqhc5JRyXcUqkgrrnVQ7c6m769LspiKO0zLcJiijHO6z"
+auth = tw.OAuthHandler(api_key, api_key_secret)
+auth.set_access_token(access_token, access_token_secret)
+api = tw.API(auth, wait_on_rate_limit=True)
+
+# -----------------sentiment model setup--------------#
+from transformers import BertTokenizer
+import torch
+from transformers import BertModel, BertTokenizer
+from torch import nn
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+from preprocessor import Preprocessor
+processor=Preprocessor()
+
+class SentimentClassifier(nn.Module):
+
+  def __init__(self, n_classes):
+    super(SentimentClassifier, self).__init__()
+    self.bert = BertModel.from_pretrained(PRE_TRAINED_MODEL_NAME)
+    self.drop = nn.Dropout(p=0.3)
+    self.out = nn.Linear(self.bert.config.hidden_size, n_classes)
+  
+  def forward(self, input_ids, attention_mask):
+    _, pooled_output = self.bert(
+      input_ids=input_ids,
+      attention_mask=attention_mask,
+      return_dict=False
+    )
+    output = self.drop(pooled_output)
+    return self.out(output)
+
+
+
+class_names=['negative','neutral','positive']
+model=torch.load(r'C:\Users\ganes\OneDrive\Documents\GitHub\Sentment-analysis\BERT sentiment analysis\checkpoint.pth')
+
+
+MAX_LEN = 160
+PRE_TRAINED_MODEL_NAME = 'bert-base-cased'
+tokenizer = BertTokenizer.from_pretrained(PRE_TRAINED_MODEL_NAME)
+
+
+def create_format(review_text):
+    encoded_review = tokenizer.encode_plus(
+        review_text,
+        max_length=MAX_LEN,
+        add_special_tokens=True,
+        return_token_type_ids=False,
+        padding='max_length',
+        return_attention_mask=True,
+        return_tensors='pt',
+    )
+    return encoded_review['input_ids'].to(device),encoded_review['attention_mask'].to(device)
 
 
 
 
+def final_output(review_text):
+    input_ids,attention_mask=create_format(review_text)
+    output = model(input_ids, attention_mask)
+    _, prediction = torch.max(output, dim=1)
+    # print(f'Review text: {review_text}')
+    # print(f'Sentiment  : {class_names[prediction]}')
+    return f'Review text: {review_text}\nSentiment  : {class_names[prediction]}',prediction
+
+pr=Preprocessor()
 
 # ------------functions-------------#
 
-def output_sentiment():
-    to_search=user_search.get()
-
+def print_sentiement():
+    final_sentiment=0
+    to_print=user_search.get()
+    search_words=to_print
+    tweets = tw.Cursor(api.search_tweets,
+                q=search_words,
+                lang="en",
+                ).items(100)
+    for tweet in tweets:
+        twt_str=tweet.text
+        twt_str=pr.call_all_func(twt_str)
+        final_out,numeric_senti='-->'+ final_output(twt_str) + '\n'
+        out_txt.insert(tk.END,final_out)
+        if numeric_senti==0:
+            final_sentiment-=1
+        elif numeric_senti==2:
+            final_sentiment+=1
+        else :
+            pass
 
 
 def create_out_window():
-    out_txt=tk.Text(width=70,height=20,state=tk.DISABLED)
-    to_print=user_search.get()
+    global out_txt
+    out_txt=tk.Text(width=70,height=20)
+    out_txt.clipboard_clear()
     canvas.create_window(400,400,window=out_txt)
-    out_txt.insert(tk.END,f'{to_print}')
-
+    print_sentiement()
+    
+        
+        
+        
+        
 
 
 # ---------------UI-------------#
@@ -53,6 +144,7 @@ search_button.place(x=560,y=107)
 
 
 
+    
 
 
 
