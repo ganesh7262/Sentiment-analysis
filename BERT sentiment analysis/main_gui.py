@@ -137,6 +137,7 @@ canvas.create_text(400, 50, text='Sentiment classifier',
 # -------get_input-----#
 
 user_search = tk.Entry(width=40)
+user_search.focus()
 input_text = canvas.create_text(200, 120, text='Enter the Entity: ', font=(
     'MS Serif', 20, 'bold'), fill='white')
 canvas.create_window(430, 120, window=user_search)
