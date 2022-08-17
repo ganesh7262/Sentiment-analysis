@@ -3,12 +3,11 @@ import emoji
 
 class Preprocessor:
     
-    def remove_urls (text):
-        return re.sub('http://\S+|https://\S+', '', text)
+    def remove_urls (self,text):
+        return  re.sub(r"https:(\/\/t\.co\/([A-Za-z0-9]|[A-Za-z]){10})", "", text)
     
-    
-    def remove_non_ascii(self,text):
-        return re.sub(r'[^\x00-\x7f]',r'', text)
+    # def remove_non_ascii(self,text):
+    #     return re.sub(r'[^\x00-\x7f]',r'', text)
     
     def remove_punct(self,text):
         return re.sub(r'[]!"$%&\'()*+,./:;=#@?[\\^_`{|}~-]+', "", text)
@@ -21,10 +20,10 @@ class Preprocessor:
         return ''.join(txt)
     
     def call_all_func(self,X):
-        X=self.emoji_handeling(X)
         X=self.remove_urls(X)
-        X=self.remove_non_ascii(X)
+        X=self.emoji_handeling(X)
         X=self.remove_punct(X)
+        # X=self.remove_non_ascii(X)
 
         return X
 
