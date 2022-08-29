@@ -130,7 +130,7 @@ bg_img = tk.PhotoImage(
 
 canvas = tk.Canvas(width=800, height=600)
 canvas.create_image(400, 300, image=bg_img)
-canvas.create_text(400, 50, text='Sentiment classifier',
+canvas.create_text(410, 50, text='Know What People think about..',
                    font=UI_FONT, fill='white')
 
 
@@ -138,13 +138,13 @@ canvas.create_text(400, 50, text='Sentiment classifier',
 
 user_search = tk.Entry(width=40)
 user_search.focus()
-input_text = canvas.create_text(200, 120, text='Enter the Entity: ', font=(
-    'MS Serif', 20, 'bold'), fill='white')
-canvas.create_window(430, 120, window=user_search)
+# input_text = canvas.create_text(200, 120, text='Enter the Entity: ', font=(
+#     'MS Serif', 20, 'bold'), fill='white')
+canvas.create_window(370, 120, window=user_search)
 canvas.grid()
 
 search_button = tk.Button(text='Search', command=create_out_window)
-search_button.place(x=560, y=107)
+search_button.place(x=500, y=107)
 
 
 root.mainloop()
