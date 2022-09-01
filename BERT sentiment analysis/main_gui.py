@@ -87,7 +87,7 @@ def print_sentiement():
     tweets = tw.Cursor(api.search_tweets,
                        q=search_words,
                        lang="en",
-                       ).items(100)
+                       ).items(200)
     for tweet in tweets:
         twt_str = tweet.text
         twt_str = pr.call_all_func(twt_str)

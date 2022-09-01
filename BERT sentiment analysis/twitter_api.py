@@ -4,7 +4,7 @@ import json
 
 # To set your environment variables in your terminal run the following line:
 # export 'BEARER_TOKEN'='<your_bearer_token>'
-bearer_token = 'AAAAAAAAAAAAAAAAAAAAAAOabQEAAAAAQDoJtk%2FE5Z%2Fp%2BxaMck%2FVofm1o04%3DIxZQW8LNNDU7FGWWYA6hi6anIq7FdLDbY9j7B0MbzwyeL9BuHU'
+bearer_token = 'AAAAAAAAAAAAAAAAAAAAAAOabQEAAAAA0WCRc%2FuZYKnclS%2FEY5YsCkGtR8g%3D1bOB5DcRbh37XnFVZmsz41x9XI0dvuoD2eYP1kpMC3GzuxSU2r'
 
 # search_url = "https://api.twitter.com/2/tweets/search/recent"
 search_url="https://api.twitter.com/2/tweets/search/all"
@@ -12,7 +12,7 @@ search_url="https://api.twitter.com/2/tweets/search/all"
 # Optional params: start_time,end_time,since_id,until_id,max_results,next_token,
 # expansions,tweet.fields,media.fields,poll.fields,place.fields,user.fields
 def params_(query):
-    return {'query': f'{query} -is%3Aretweet' +'&max_results=100' + " -filter:retweets"}
+    return {'query': f'{query}' +'&max_results=100'}
 # query_params = {'query': '(from:twitterdev -is:retweet) OR #twitterdev','tweet.fields': 'author_id'}
 
 
